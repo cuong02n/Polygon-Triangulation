@@ -1,0 +1,7 @@
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\Test\bin\Debug\Test.exe
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\Test\bin\Debug\Test.pdb
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\Test\obj\Debug\Test.csproj.AssemblyReference.cache
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\Test\obj\Debug\Test.csproj.SuggestedBindingRedirects.cache
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\Test\obj\Debug\Test.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\Test\obj\Debug\Test.exe
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\Test\obj\Debug\Test.pdb
