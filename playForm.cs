@@ -51,7 +51,7 @@ namespace Polygon_Triangulation {
 
         private void Panel1_MouseClick(object sender, MouseEventArgs e) {
             Brush b = (Brushes.Aqua);
-            g.FillEllipse(b, e.X - 2, e.Y - 2, 3, 3);
+            g.FillEllipse(b, e.X - 3, e.Y - 3, 6, 6);
             v.Add(new Point(e.X, e.Y));
             SizeLabel.Text = v.Count.ToString();
         }
@@ -116,6 +116,19 @@ namespace Polygon_Triangulation {
 
         private void highlight(Point i) {
             tmp = g.Save();
+            g.DrawEllipse(new Pen(Brushes.Red,6),i.X-3,i.Y-3,6,6);
+        }
+
+        private void unhighlight() {
+            splitContainer1.Panel1.Refresh();
+            g.Restore(tmp);
+        }
+
+        private void drawLine(Point A,Point B) {
+            splitContainer1.Panel1.Refresh();
+            g.Restore(tmp);
+            g.DrawLine(new Pen(Brushes.Gold,3),A,B);
+            tmp = g.Save();
         }
         private void process(List<Point> l) {
             draw_edge();
@@ -136,7 +149,7 @@ namespace Polygon_Triangulation {
                     int b = getItem(indexlist, i - 1);
                     int c = getItem(indexlist, i + 1);
 
-                    
+                    highlight(v[a]);
                     
                     Vector2 v_ab = v2[b] - v2[a];
                     Vector2 v_ac = v2[c] - v2[a];
@@ -154,7 +167,7 @@ namespace Polygon_Triangulation {
                         if (j == a || j == b || j == c) {
                             continue;
                         }
-
+                            
                         if (is_in_triangle(v2[j], v2[a], v2[b], v2[c])) {
                             isEar = false;
                             break;
@@ -165,7 +178,9 @@ namespace Polygon_Triangulation {
                         display_message("Đỉnh này là tai --> xóa bỏ");
                         indexlist.RemoveAt(i);
                         break;
+                        drawLine(v[b],v[c]);
                     }
+                    unhighlight();
                 }
             }
 

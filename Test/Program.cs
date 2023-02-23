@@ -4,11 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Threading;
 
 namespace Test {
     internal class Program {
         public static string path = "C:/Users/Admin/Desktop/COZE/C#/Polygon_Triangulation/log.txt";
         public static StreamWriter w = new StreamWriter(path);
+        public static int DELAY=300;
         public static void Main(string[] args) {
 
             A a = new A();
@@ -73,8 +75,7 @@ namespace Test {
 
                         Vector2 v_ab = v2[b] - v2[a];
                         Vector2 v_ac = v2[c] - v2[a];
-
-                        display_message($"point a= {a} , b= {b}, c= {c}");
+                        
                         if (Cross(v_ab, v_ac) < 0f) {
                             // goc 
                             display_message("cross(ab,ac) < 0 , continue.");
@@ -90,7 +91,6 @@ namespace Test {
 
                             if (is_in_triangle(v2[j], v2[a], v2[b], v2[c])) {
                                 isEar = false;
-                                display_message("");
                                 break;
                             }
                         }

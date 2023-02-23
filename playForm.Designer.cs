@@ -33,9 +33,11 @@ namespace Polygon_Triangulation {
             this.clear = new System.Windows.Forms.Button();
             this.start = new System.Windows.Forms.Button();
             this.mouse_info = new System.Windows.Forms.Label();
+            this.timer1 = new System.Timers.Timer();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.timer1)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -112,6 +114,13 @@ namespace Polygon_Triangulation {
             this.mouse_info.TabIndex = 0;
             this.mouse_info.Text = "Vị trí chuột :";
             // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 300D;
+            this.timer1.SynchronizingObject = this;
+
+            // 
             // playForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -130,9 +139,12 @@ namespace Polygon_Triangulation {
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.timer1)).EndInit();
             this.ResumeLayout(false);
         }
 
+        private System.Timers.Timer timer1;
+        // private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label MessageLabel;
 
         private System.Windows.Forms.Label SizeLabel;
