@@ -2,8 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polygon_Triangulation", "Polygon_Triangulation.csproj", "{8F52F2E2-9226-4FC0-A5F8-FAD247CE2427}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{67B8FA59-E979-4BF0-BA85-E097B89B0CBC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,9 +12,5 @@ Global
 		{8F52F2E2-9226-4FC0-A5F8-FAD247CE2427}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F52F2E2-9226-4FC0-A5F8-FAD247CE2427}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F52F2E2-9226-4FC0-A5F8-FAD247CE2427}.Release|Any CPU.Build.0 = Release|Any CPU
-		{67B8FA59-E979-4BF0-BA85-E097B89B0CBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67B8FA59-E979-4BF0-BA85-E097B89B0CBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{67B8FA59-E979-4BF0-BA85-E097B89B0CBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{67B8FA59-E979-4BF0-BA85-E097B89B0CBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

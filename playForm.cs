@@ -10,15 +10,17 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Timers;
+using Timer = System.Timers.Timer;
 
 namespace Polygon_Triangulation {
     public partial class playForm : Form {
-        public List<Point> v = new List<Point>();
+        private List<Point> v = new List<Point>();
 
-        private Graphics g;
-        public List<int> ear_remove = new List<int>();
+        public Graphics g;
         private List<string> message = new List<string>();
-        public const int MAX_DEQUE = 15;
+        public const int MAX_DEQUE = 25;
 
         public GraphicsState firststate;
         public GraphicsState connectedState;
@@ -31,6 +33,10 @@ namespace Polygon_Triangulation {
             firststate = g.Save();
             Show();
             MessageBox.Show("Vẽ hình bằng cách chấm các điểm trên màn hình");
+        }
+
+        private async void delay(int miliseconds) {
+            await Task.Delay(miliseconds);
         }
 
         private void playForm_Click(object sender, EventArgs e) {
@@ -89,34 +95,43 @@ namespace Polygon_Triangulation {
 
             MessageLabel.Text = sb.ToString();
         }
+        
 
-        public bool is_in_triangle(Vector2 p, Vector2 a, Vector2 b, Vector2 c) {
-            Vector2 ab = b - a;
-            Vector2 bc = c - b;
-            Vector2 ca = c - a;
+        // public bool is_in_triangle(Vector2 p, Vector2 a, Vector2 b, Vector2 c) {
+        //     Vector2 ab = b - a;
+        //     Vector2 bc = c - b;
+        //     Vector2 ca = c - a;
+        //
+        //     Vector2 ap = p - a;
+        //     Vector2 bp = p - a;
+        //     Vector2 cp = p - c;
+        //
+        //     return Cross(ab, ap) <= 0f && Cross(bc, bp) <= 0f && Cross(ca, cp) <= 0f;
+        //
+        // }
+        public static bool is_in_triangle(Vector2 p, Vector2 p0, Vector2 p1, Vector2 p2) {
+            float s = (p0.X - p2.X) * (p.Y - p2.Y) - (p0.Y - p2.Y) * (p.X - p2.X);
+            float t = (p1.X - p0.X) * (p.Y - p0.Y) - (p1.Y - p0.Y) * (p.X - p0.X);
 
-            Vector2 ap = p - a;
-            Vector2 bp = p - a;
-            Vector2 cp = p - c;
-            
-            if (Cross(ab, ap) > 0f || Cross(bc, bp) > 0f || Cross(ca, cp) > 0f) {
+            if ((s < 0) != (t < 0) && s != 0 && t != 0)
                 return false;
-            }
 
-            return true;
+            float d = (p2.X - p1.X) * (p.Y - p1.Y) - (p2.Y - p1.Y) * (p.X - p1.X);
+            return d == 0 || (d < 0) == (s + t <= 0);
         }
 
         private void draw_edge() {
             connectedState = g.Save();
-            for (int i = 0; i < v.Count()-1; i++) {
-                g.DrawLine(new Pen(Brushes.Chartreuse,3),v[i],v[i+1]);
+            for (int i = 0; i < v.Count() - 1; i++) {
+                g.DrawLine(new Pen(Brushes.Red, 3), v[i], v[i + 1]);
             }
-            g.DrawLine(new Pen(Brushes.Chartreuse,3),v.Last(),v.First());
+
+            g.DrawLine(new Pen(Brushes.Red, 3), v.Last(), v.First());
         }
 
         private void highlight(Point i) {
             tmp = g.Save();
-            g.DrawEllipse(new Pen(Brushes.Red,6),i.X-3,i.Y-3,6,6);
+            g.DrawEllipse(new Pen(Brushes.Red, 6), i.X - 3, i.Y - 3, 6, 6);
         }
 
         private void unhighlight() {
@@ -124,40 +139,44 @@ namespace Polygon_Triangulation {
             g.Restore(tmp);
         }
 
-        private void drawLine(Point A,Point B) {
-            splitContainer1.Panel1.Refresh();
-            g.Restore(tmp);
-            g.DrawLine(new Pen(Brushes.Gold,3),A,B);
-            tmp = g.Save();
+        private void drawLine(Point A, Point B) {
+            // splitContainer1.Panel1.Refresh();
+            // g.Restore(tmp);
+            g.DrawLine(new Pen(Brushes.Gold, 3), A, B);
+            // tmp = g.Save();
         }
+
         private void process(List<Point> l) {
+            display_message("START");
             draw_edge();
-            
+
             List<int> indexlist = new List<int>();
 
             List<Vector2> v2 = new List<Vector2>();
-            
+
             for (int i = 0; i < v.Count; i++) {
                 indexlist.Add(i);
                 v2.Add(new Vector2(v[i].X, v[i].Y));
             }
-            
+
             while (indexlist.Count > 3) {
-                display_message("while loop");
                 for (int i = 0; i < indexlist.Count; i++) {
+                    delay(300);
+                    
+                    display_message($"for loop, i= {i}, xét đỉnh {indexlist[i]}");
                     int a = indexlist[i];
                     int b = getItem(indexlist, i - 1);
                     int c = getItem(indexlist, i + 1);
 
-                    highlight(v[a]);
-                    
+                    // highlight(v[a]);
+
                     Vector2 v_ab = v2[b] - v2[a];
                     Vector2 v_ac = v2[c] - v2[a];
 
-                    display_message($"point {a} , {b}, {c}");
+                    display_message($"point a= {a} , b= {b}, c= {c}");
                     if (Cross(v_ab, v_ac) < 0f) {
                         // goc 
-                        display_message("continue ");
+                        display_message("cross < 0,continue ");
                         continue;
                     }
 
@@ -167,7 +186,7 @@ namespace Polygon_Triangulation {
                         if (j == a || j == b || j == c) {
                             continue;
                         }
-                            
+
                         if (is_in_triangle(v2[j], v2[a], v2[b], v2[c])) {
                             isEar = false;
                             break;
@@ -175,12 +194,11 @@ namespace Polygon_Triangulation {
                     }
 
                     if (isEar) {
-                        display_message("Đỉnh này là tai --> xóa bỏ");
+                        display_message($"Đỉnh {a} này là tai --> xóa bỏ");
                         indexlist.RemoveAt(i);
+                        drawLine(v[b], v[c]);
                         break;
-                        drawLine(v[b],v[c]);
                     }
-                    unhighlight();
                 }
             }
 
@@ -198,7 +216,7 @@ namespace Polygon_Triangulation {
             }
 
             if (index >= l.Count) {
-                return l[index - l.Count];
+                return l[index % l.Count];
             }
 
             return l[index];

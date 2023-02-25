@@ -33,11 +33,11 @@ namespace Polygon_Triangulation {
             this.clear = new System.Windows.Forms.Button();
             this.start = new System.Windows.Forms.Button();
             this.mouse_info = new System.Windows.Forms.Label();
-            this.timer1 = new System.Timers.Timer();
+            this.delay_timer = new System.Timers.Timer();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.timer1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.delay_timer)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -66,12 +66,11 @@ namespace Polygon_Triangulation {
             // MessageLabel
             // 
             this.MessageLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.MessageLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MessageLabel.Location = new System.Drawing.Point(3, 240);
+            this.MessageLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MessageLabel.Location = new System.Drawing.Point(3, 207);
             this.MessageLabel.Name = "MessageLabel";
-            this.MessageLabel.Size = new System.Drawing.Size(326, 472);
+            this.MessageLabel.Size = new System.Drawing.Size(326, 514);
             this.MessageLabel.TabIndex = 4;
-            this.MessageLabel.Text = "message";
             this.MessageLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // SizeLabel
@@ -81,7 +80,6 @@ namespace Polygon_Triangulation {
             this.SizeLabel.Name = "SizeLabel";
             this.SizeLabel.Size = new System.Drawing.Size(100, 37);
             this.SizeLabel.TabIndex = 3;
-            this.SizeLabel.Text = "0";
             this.SizeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // clear
@@ -112,14 +110,6 @@ namespace Polygon_Triangulation {
             this.mouse_info.Name = "mouse_info";
             this.mouse_info.Size = new System.Drawing.Size(200, 23);
             this.mouse_info.TabIndex = 0;
-            this.mouse_info.Text = "Vị trí chuột :";
-            // 
-            // timer1
-            // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 300D;
-            this.timer1.SynchronizingObject = this;
-
             // 
             // playForm
             // 
@@ -128,22 +118,23 @@ namespace Polygon_Triangulation {
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(1348, 721);
             this.Controls.Add(this.splitContainer1);
+            this.Location = new System.Drawing.Point(15, 15);
             this.MaximumSize = new System.Drawing.Size(1366, 768);
             this.MinimumSize = new System.Drawing.Size(1366, 768);
             this.Name = "playForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Polygon Triangulation";
             this.Click += new System.EventHandler(this.playForm_Click);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.playForm_MouseClick);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.playForm_MouseMove);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.timer1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.delay_timer)).EndInit();
             this.ResumeLayout(false);
         }
 
-        private System.Timers.Timer timer1;
+        private System.Timers.Timer delay_timer;
+
         // private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label MessageLabel;
 

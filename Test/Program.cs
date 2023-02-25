@@ -20,7 +20,7 @@ namespace Test {
 
         class A {
             
-            public const int MAX_DEQUE = 15;
+            public const int MAX_DEQUE = 25;
 
 
             private void display_message(string err) {

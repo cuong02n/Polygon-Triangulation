@@ -1,0 +1,12 @@
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\bin\Release\Polygon_Triangulation.exe.config
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\bin\Release\Polygon_Triangulation.exe
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\bin\Release\Polygon_Triangulation.pdb
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\obj\Release\Polygon_Triangulation.csproj.AssemblyReference.cache
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\obj\Release\Polygon_Triangulation.csproj.SuggestedBindingRedirects.cache
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\obj\Release\Polygon_Triangulation.mainForm.resources
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\obj\Release\Polygon_Triangulation.playForm.resources
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\obj\Release\Polygon_Triangulation.Properties.Resources.resources
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\obj\Release\Polygon_Triangulation.csproj.GenerateResource.cache
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\obj\Release\Polygon_Triangulation.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\obj\Release\Polygon_Triangulation.exe
+C:\Users\Admin\Desktop\COZE\C#\Polygon_Triangulation\obj\Release\Polygon_Triangulation.pdb
