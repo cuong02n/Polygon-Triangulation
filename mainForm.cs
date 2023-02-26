@@ -12,7 +12,6 @@ namespace Polygon_Triangulation {
     public partial class mainForm : Form {
         public mainForm() {
             InitializeComponent();
-            
         }
 
         private void using_monotone_btn(object sender, EventArgs e) {

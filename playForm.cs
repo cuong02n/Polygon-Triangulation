@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -17,7 +18,6 @@ using Timer = System.Timers.Timer;
 namespace Polygon_Triangulation {
     public partial class playForm : Form {
         private List<Point> v = new List<Point>();
-
         public Graphics g;
         private List<string> message = new List<string>();
         public const int MAX_DEQUE = 25;
@@ -95,7 +95,7 @@ namespace Polygon_Triangulation {
 
             MessageLabel.Text = sb.ToString();
         }
-        
+
 
         // public bool is_in_triangle(Vector2 p, Vector2 a, Vector2 b, Vector2 c) {
         //     Vector2 ab = b - a;
@@ -162,7 +162,7 @@ namespace Polygon_Triangulation {
             while (indexlist.Count > 3) {
                 for (int i = 0; i < indexlist.Count; i++) {
                     delay(300);
-                    
+
                     display_message($"for loop, i= {i}, xét đỉnh {indexlist[i]}");
                     int a = indexlist[i];
                     int b = getItem(indexlist, i - 1);
@@ -220,6 +220,11 @@ namespace Polygon_Triangulation {
             }
 
             return l[index];
+        }
+
+        protected override void OnClosing(CancelEventArgs e) {
+            Application.Exit();
+            base.OnClosing(e);
         }
     }
 }

@@ -111,6 +111,10 @@ namespace Polygon_Triangulation {
             this.mouse_info.Size = new System.Drawing.Size(200, 23);
             this.mouse_info.TabIndex = 0;
             // 
+            // delay_timer
+            // 
+            this.delay_timer.SynchronizingObject = this;
+            // 
             // playForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -123,6 +127,7 @@ namespace Polygon_Triangulation {
             this.MinimumSize = new System.Drawing.Size(1366, 768);
             this.Name = "playForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Polygon-Triangulation Update 26/2/2023";
             this.Click += new System.EventHandler(this.playForm_Click);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.playForm_MouseClick);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.playForm_MouseMove);
