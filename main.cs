@@ -6,14 +6,18 @@ using System.Windows.Forms;
 using System.Numerics;
 
 namespace Polygon_Triangulation {
+
+    enum TYPE {
+        MONOTONE,
+        EAR_CLIPPING
+    }
     static class main {
         public static mainForm mainform;
         
         public static playForm _playForm;
 
-        public static string type;
-        
-        
+        public static TYPE type;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>

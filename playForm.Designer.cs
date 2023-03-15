@@ -48,11 +48,13 @@ namespace Polygon_Triangulation {
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.AutoScroll = true;
             this.splitContainer1.Panel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Panel1_MouseClick);
             this.splitContainer1.Panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Panel1_MouseMove);
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.AutoScroll = true;
             this.splitContainer1.Panel2.BackColor = System.Drawing.Color.AliceBlue;
             this.splitContainer1.Panel2.Controls.Add(this.MessageLabel);
             this.splitContainer1.Panel2.Controls.Add(this.SizeLabel);
@@ -60,7 +62,7 @@ namespace Polygon_Triangulation {
             this.splitContainer1.Panel2.Controls.Add(this.start);
             this.splitContainer1.Panel2.Controls.Add(this.mouse_info);
             this.splitContainer1.Size = new System.Drawing.Size(1348, 721);
-            this.splitContainer1.SplitterDistance = 1015;
+            this.splitContainer1.SplitterDistance = 1014;
             this.splitContainer1.TabIndex = 0;
             // 
             // MessageLabel
@@ -69,7 +71,7 @@ namespace Polygon_Triangulation {
             this.MessageLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MessageLabel.Location = new System.Drawing.Point(3, 207);
             this.MessageLabel.Name = "MessageLabel";
-            this.MessageLabel.Size = new System.Drawing.Size(326, 514);
+            this.MessageLabel.Size = new System.Drawing.Size(327, 514);
             this.MessageLabel.TabIndex = 4;
             this.MessageLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
@@ -85,7 +87,7 @@ namespace Polygon_Triangulation {
             // clear
             // 
             this.clear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.clear.Location = new System.Drawing.Point(206, 161);
+            this.clear.Location = new System.Drawing.Point(207, 161);
             this.clear.Name = "clear";
             this.clear.Size = new System.Drawing.Size(68, 30);
             this.clear.TabIndex = 2;
@@ -108,7 +110,7 @@ namespace Polygon_Triangulation {
             this.mouse_info.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.mouse_info.Location = new System.Drawing.Point(74, 96);
             this.mouse_info.Name = "mouse_info";
-            this.mouse_info.Size = new System.Drawing.Size(200, 23);
+            this.mouse_info.Size = new System.Drawing.Size(201, 23);
             this.mouse_info.TabIndex = 0;
             // 
             // delay_timer
