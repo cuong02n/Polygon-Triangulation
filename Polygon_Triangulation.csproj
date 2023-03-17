@@ -53,6 +53,7 @@
         <Compile Include="mainForm.Designer.cs">
             <DependentUpon>mainForm.cs</DependentUpon>
         </Compile>
+        <Compile Include="Monotone_Polygon.cs" />
         <Compile Include="playForm.cs">
           <SubType>Form</SubType>
         </Compile>

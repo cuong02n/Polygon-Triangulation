@@ -11,17 +11,21 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Polygon_Triangulation {
-    class Vertex {
+    public class Vertex {
         public int index;
         public Point P;
         public int type;
+        public bool chain; // left or right
 
         public Vertex(int index, Point p) {
             this.index = index;
             P = p;
         }
 
-        public Vertex() {
+        public Vertex(int index, Point p, bool chain) {
+            this.index = index;
+            this.P = p;
+            this.chain = chain;
         }
     };
 
@@ -106,6 +110,8 @@ namespace Polygon_Triangulation {
             Tree.Clear();
             eventQ.Clear();
             ans.Clear();
+            currentPolygon.Clear();
+            
 
             MessageLabel.Text = "Message";
             SizeLabel.Text = "0";
@@ -156,7 +162,7 @@ namespace Polygon_Triangulation {
         //     g.Restore(tmp);
         // }
 
-        private void drawLine(Point A, Point B) {
+        private static void drawLine(Point A, Point B) {
             // splitContainer1.Panel1.Refresh();
             // g.Restore(tmp);
             g.DrawLine(new Pen(Brushes.Gold, 3), A, B);
@@ -164,7 +170,7 @@ namespace Polygon_Triangulation {
         }
 
         private static void drawDashedLine(Point A, Point B) {
-            Pen p = new Pen(Brushes.Fuchsia, 2);
+            Pen p = new Pen(Brushes.Fuchsia, 1);
             p.DashPattern = new float[] { 5, 5 };
             g.DrawLine(p, A, B);
         }
@@ -232,6 +238,7 @@ namespace Polygon_Triangulation {
         static List<KeyValuePair<int, int>> Tree = new List<KeyValuePair<int, int>>();
         static List<int> helper = new List<int>();
         static List<KeyValuePair<int, int>> ans = new List<KeyValuePair<int, int>>();
+        static List<Vertex> currentPolygon = new List<Vertex>();
 
         private void process_Monotone(List<Point> l) {
             PREPARE_DATA(l);
@@ -272,13 +279,15 @@ namespace Polygon_Triangulation {
 
         static void handleEndVertex(Vertex cur) {
             log.WriteLine("\t Là đỉnh End ");
-            int prev = cur.index - 2;
+            int prev = cur.index - 2; // prev = 2
             if (cur.index - 2 == -1) {
                 prev = poly.Count - 1;
             }
 
+            log.WriteLine("\t Đỉnh trước = " + (prev + 1));
+
             if (poly[helper[prev] - 1].type == 3) {
-                log.WriteLine("\tHelper[ " + prev + "} là merge , Thêm đường chéo giữa" + cur.index + " và " +
+                log.WriteLine("\tHelper[ " + (prev + 1) + "] là merge , Thêm đường chéo giữa" + cur.index + " và " +
                               helper[prev]);
                 ans.Add(new KeyValuePair<int, int>(cur.index, helper[prev]));
             }
@@ -300,16 +309,16 @@ namespace Polygon_Triangulation {
             if (cur.index - 2 == -1)
                 prev = poly.Count - 1;
             log.WriteLine("\t Đỉnh prev ( đỉnh trước):" + (prev + 1));
-            try {
-                if (poly[helper[prev] - 1].type == 3) {
-                    log.WriteLine("\t ----- Thêm đỉnh  " + poly[cur.index].P.X + "," +
-                                  poly[cur.index].P.Y + " and " + poly[helper[prev]].P.X + "," +
-                                  poly[helper[prev]].P.Y + "làm đường chéo");
-                    ans.Add(new KeyValuePair<int, int>(cur.index, helper[prev]));
-                }
-            } catch (Exception e) {
-                log.WriteLine(e.ToString());
+            // try {
+            if (poly[helper[prev] - 1].type == 3) {
+                log.WriteLine("\t ----- Thêm đỉnh  " + poly[cur.index].P.X + "," +
+                              poly[cur.index].P.Y + " and " + poly[helper[prev]].P.X + "," +
+                              poly[helper[prev]].P.Y + "làm đường chéo");
+                ans.Add(new KeyValuePair<int, int>(cur.index, helper[prev]));
             }
+            // } catch (Exception e) {
+            // log.WriteLine(e.ToString());
+            // }
 
             for (int i = 0; i < Tree.Count; i++) {
                 if (Tree[i].Key == helper[prev]) {
@@ -321,39 +330,32 @@ namespace Polygon_Triangulation {
 
             if (Tree.Count != 0) {
                 log.WriteLine("\t Tìm đỉnh trái :");
-                Vertex left = new Vertex();
+                Vertex left = null;
                 if (Tree.Count == 1) {
                     left = poly[Tree[0].Key - 1];
                 }
 
                 for (int i = 0; i < Tree.Count; i++) {
                     log.WriteLine("\t Đang xét đỉnh :" + Tree[i].Value + " " + Tree[i].Key);
-                    // try {
+
                     if (Tree[i].Value > cur.P.X) {
-                        // console_WriteLine.WriteLine("this is greater");
                         left = poly[Tree[i - 1].Key - 1];
                         log.WriteLine("\t Đỉnh trái là đỉnh : " + (left.index + 1));
                         break;
                     }
-                    // } catch (Exception e) {
-                    //     MessageBox.Show(e.ToString());
-                    // }
 
                     left = poly[Tree[i].Key - 1];
                 }
 
-                // cout+":::";
-                try {
-                    if (poly[helper[left.index - 1] - 1].type == 3) {
-                        log.WriteLine("\t Đỉnh helper[" + (left.index - 1) + "] -1 là đỉnh " +
-                                      poly[helper[left.index - 1] - 1].index + " là Merge");
-                        log.WriteLine("\t Thêm đường chéo giữa " + cur.index + " and " +
-                                      helper[left.index - 1]);
-                        ans.Add(new KeyValuePair<int, int>(cur.index, helper[left.index - 1]));
-                    }
-                } catch (Exception e) {
-                    MessageBox.Show(e.ToString());
+
+                if (poly[helper[left.index - 1] - 1].type == 3) {
+                    log.WriteLine("\t Đỉnh helper[" + (left.index - 1) + "] -1 là đỉnh " +
+                                  poly[helper[left.index - 1] - 1].index + " là Merge");
+                    log.WriteLine("\t Thêm đường chéo giữa " + cur.index + " and " +
+                                  helper[left.index - 1]);
+                    ans.Add(new KeyValuePair<int, int>(cur.index, helper[left.index - 1]));
                 }
+
 
                 helper[left.index - 1] = cur.index;
                 log.WriteLine("\t helper(" + left.index + ")=" + cur.index);
@@ -361,7 +363,7 @@ namespace Polygon_Triangulation {
         }
 
         static void handleSplitVertex(Vertex current) {
-            Vertex left = new Vertex();
+            Vertex left = null;
             log.WriteLine("\t Là đỉnh SPLIT");
             if (Tree.Count != 0) {
                 if (Tree.Count == 1) {
@@ -370,12 +372,9 @@ namespace Polygon_Triangulation {
 
                 for (int i = 0; i < Tree.Count; i++) {
                     if (Tree[i].Value > current.P.X) {
-                        try {
-                            left = poly[Tree[i - 1].Key - 1];
-                            break;
-                        } catch (Exception e) {
-                            // ignore
-                        }
+                        // Tìm cái gần nhất bên trái, ở trong Tree
+                        left = poly[Tree[i - 1].Key - 1];
+                        break;
                     }
 
                     left = poly[Tree[i].Key - 1];
@@ -409,11 +408,12 @@ namespace Polygon_Triangulation {
         static void handleRegularVertex(Vertex cur) {
             int prev = cur.index - 2;
             log.WriteLine("\n Là đỉnh REGULAR");
-            
-            if (cur.index - 2 < 0 || right(cur, poly[cur.index - 2])) {
+            if (cur.index - 2 == -1)
+                prev = poly.Count - 1;
+            if (right(cur, poly[prev])) {
                 log.WriteLine("if(right) case:\n\t");
-                if (cur.index - 2 == -1)
-                    prev = poly.Count - 1;
+                log.WriteLine("\t current index = " + (cur.index + 1));
+                log.WriteLine("\t Prev = " + (prev + 1));
                 if (poly[helper[prev] - 1].type == 3) {
                     log.WriteLine("\t Thêm đường chéo: giữa 2 đỉnh " + cur.index + ",  " + helper[prev]);
                     ans.Add(new KeyValuePair<int, int>(cur.index, helper[prev]));
@@ -421,7 +421,7 @@ namespace Polygon_Triangulation {
 
                 for (int i = 0; i < Tree.Count; i++) {
                     if (Tree[i].Key == helper[prev]) {
-                        log.WriteLine("\t Xóa helper[" + (prev +1) + "] = Đỉnh " + Tree[i].Key + " Khỏi cây");
+                        log.WriteLine("\t Xóa helper[" + (prev + 1) + "] = Đỉnh " + Tree[i].Key + " Khỏi cây");
                         Tree.RemoveAt(i);
                         break;
                     }
@@ -433,7 +433,7 @@ namespace Polygon_Triangulation {
                               cur.index);
             } else {
                 log.WriteLine("\t Else case : \t");
-                Vertex left = new Vertex();
+                Vertex left = null;
                 if (Tree.Count != 0) {
                     if (Tree.Count == 1) {
                         left = poly[Tree[0].Key - 1];
@@ -441,16 +441,14 @@ namespace Polygon_Triangulation {
 
                     log.WriteLine("\t Tìm Left : ");
                     for (int i = 0; i < Tree.Count; i++) {
-                        try {
-                            if (Tree[i].Value > cur.P.X) {
-                                log.WriteLine("\t Tree[" + i + "] có value = " + Tree[i].Value +
-                                              " > current.Point.X (" + cur.P.X + ")");
-                                log.WriteLine("\t Left = " + poly[Tree[i - 1].Key - 1].index);
-                                left = poly[Tree[i - 1].Key - 1];
-                                break;
-                            }
-                        } catch (Exception) {
+                        if (Tree[i].Value > cur.P.X) {
+                            log.WriteLine("\t Tree[" + i + "] có value = " + Tree[i].Value +
+                                          " > current.Point.X (" + cur.P.X + ")");
+                            log.WriteLine("\t Left = " + poly[Tree[i - 1].Key - 1].index);
+                            left = poly[Tree[i - 1].Key - 1];
+                            break;
                         }
+
 
                         left = poly[Tree[i].Key - 1];
                     }
@@ -517,6 +515,7 @@ namespace Polygon_Triangulation {
         }
 
         static void monotonePartition() {
+            currentPolygon = new List<Vertex>(poly);
             int n = poly.Count;
             identifyVertexType();
 
@@ -539,8 +538,8 @@ namespace Polygon_Triangulation {
             while (frontQ != n) {
                 Vertex current = eventQ[frontQ];
 
-                log.WriteLine($"XÉT ĐỈNH {current.index} ");
-                
+                log.WriteLine($"XÉT ĐỈNH {current.index} có {current.P.X} {current.P.Y}");
+
                 if (current.type == 1) {
                     handleStartVertex(current);
                 } else if (current.type == 2) {
@@ -557,7 +556,13 @@ namespace Polygon_Triangulation {
                 Tree.Sort(((pair1, pair2) => { return pair1.Value - pair2.Value; }));
                 log.WriteLine("\nTree Sau khi xét lần " + (frontQ + 1) + ":\n\t");
                 for (int i = 0; i < Tree.Count; i++) {
-                    log.WriteLine("\t " + Tree[i].Key + ", "+Tree[i].Value);
+                    log.WriteLine("\t " + Tree[i].Key + ", " + Tree[i].Value);
+                }
+
+                log.WriteLine("\t : Helper");
+
+                for (int i = 0; i < helper.Count; i++) {
+                    log.WriteLine($"\t helper({i}) = {helper[i]}");
                 }
 
                 frontQ++;
@@ -568,8 +573,18 @@ namespace Polygon_Triangulation {
             log.WriteLine("\n The diagonals are inserted between:\n");
             for (int i = 0; i < ans.Count; i++) {
                 log.WriteLine(ans[i].Key + "\t" + ans[i].Value + "\n");
-                drawDashedLine(poly[ans[i].Key - 1].P, poly[ans[i].Value - 1].P);
+                Triangulate(splitPolygon(ans[i]));
+                g.DrawLine(new Pen(Brushes.Fuchsia,3.0f),poly[ans[i].Key - 1].P, poly[ans[i].Value - 1].P);
             }
+
+            List<Vertex> res = new List<Vertex>();
+            for (int i = 0; i < currentPolygon.Count; i++) {
+                if (currentPolygon[i] == null) {
+                    continue;
+                }
+                res.Add(currentPolygon[i]);
+            }
+            Triangulate(res);
         }
 
 
@@ -584,15 +599,250 @@ namespace Polygon_Triangulation {
             }
         }
 
-        static void Start() {
-            log = new StreamWriter("C:\\Users\\Admin\\Desktop\\log.txt");
-            try {
-                monotonePartition();
-            } catch (Exception) {
-            } finally {
-                log.Close();
+
+        // // static void get_monotone(List<Vertex> poly, List<KeyValuePair<int, int>> ans) {
+        //     // List<Vertex> m_poly = new List<Vertex>(poly);
+        //     for (int i = 0; (i < m_poly.Count && m_poly.Count != 0); i++) {
+        //         for (int j = 0; j < ans.Count; j++) {
+        //             if (ans[j].Key - 1 == i || ans[j].Value - 1 == i) {
+        //                 // thoa man 
+        //                 m_poly.RemoveAt(i);
+        //                 _list_
+        //             } else {
+        //                 
+        //             }
+        //         }
+        //     }
+        // }
+
+        static List<Vertex> splitPolygon(KeyValuePair<int, int> diagonal) {
+            int from = Math.Min(diagonal.Key,diagonal.Value)-1;
+            int to=  Math.Max(diagonal.Key, diagonal.Value)-1;
+            
+            List<Vertex> res = new List<Vertex>();
+            bool flag_Exception = false;
+            currentPolygon[from].type = 2;
+            currentPolygon[to].type = 2;
+            for (int i = from + 1; i != to; i = (i + 1) % poly.Count) {
+                if (currentPolygon[i] == null) {
+                    continue;
+                }
+                if (currentPolygon[i].type == 3 || currentPolygon[i].type == 4) {
+                    flag_Exception = true;
+                    break;
+                }
             }
-            // log.Close();
+            if (flag_Exception) {
+                res.Add(currentPolygon[to]);
+                for (int i = to + 1; i != from; i = (i + 1) % poly.Count) {
+                    if (currentPolygon[i] == null) {
+                        continue;
+                    }
+                    res.Add(currentPolygon[i]);
+                    currentPolygon[i] = null;
+                }
+                res.Add(currentPolygon[from]);
+            } else {
+                res.Add(currentPolygon[from]);
+                for (int i = from + 1; i != to; i = (i + 1) % poly.Count) {
+                    if (currentPolygon[i] == null) {
+                        continue;
+                    }
+                    res.Add(currentPolygon[i]);
+                    currentPolygon[i] = null;
+                }
+                res.Add(currentPolygon[to]);
+            }
+            log.WriteLine("the splited monotone polygon");
+            
+            for (int i = 0; i < res.Count; i++) {
+                log.Write(res[i].index.ToString());
+            }
+            log.WriteLine();
+            return res;
+        }
+
+        static float areaofTriangle(Point a, Point b, Point c) {
+            return ((b.X - a.X) * (c.Y - a.Y) - (c.X - a.X) * (b.Y - a.Y));
+        }
+
+        static bool Left(Point a, Point b, Point c) {
+            return areaofTriangle(a, b, c) > 0;
+        }
+
+        static bool LeftOn(Point a, Point b, Point c) {
+            return areaofTriangle(a, b, c) >= 0;
+        }
+
+        static bool InCone(List<Vertex> poly, Vertex a, Vertex b) {
+            if (LeftOn(a.P, poly[a.index < poly.Count ? a.index : 0].P,
+                    poly[(a.index - 2 >= 0) ? a.index - 2 : poly.Count - 1].P)) {
+                return (Left(a.P, b.P, poly[(a.index - 2 >= 0) ? a.index - 2 : poly.Count - 1].P) &&
+                        Left(b.P, a.P, poly[a.index < poly.Count ? a.index : 0].P));
+            }
+
+            return (!(Left(a.P, b.P, poly[a.index < poly.Count ? a.index : 0].P) &&
+                      Left(b.P, a.P, poly[(a.index - 2 >= 0) ? a.index - 2 : poly.Count - 1].P)));
+        }
+
+        static bool Collinear(Point a, Point b, Point c) {
+            return areaofTriangle(a, b, c) == 0;
+        }
+
+        static bool Xor(bool x, bool y) {
+            return !x ^ !y;
+        }
+
+        static bool Intersection(Point a, Point b, Point c, Point d) {
+            if (Collinear(a, b, c) || Collinear(a, b, d) || Collinear(c, d, a) || Collinear(c, d, b))
+                return false;
+            return Xor(Left(a, b, c), Left(a, b, d)) && Xor(Left(c, d, a), Left(c, d, b));
+        }
+
+        static bool Between(Point a, Point b, Point c) {
+            if (!Collinear(a, b, c))
+                return false;
+            if (a.X != b.X) {
+                return (((a.X <= c.X) && (c.X <= b.X)) || ((a.X >= c.X) && (c.X >= b.X)));
+            } else
+                return (((a.Y <= c.Y) && (c.Y <= b.Y)) || ((a.Y >= c.Y) && (c.Y >= b.Y)));
+        }
+
+        static bool Intersect(Point a, Point b, Point c, Point d) {
+            if (Intersection(a, b, c, d)) {
+                return true;
+            } else if (Between(a, b, c) || Between(a, b, d) || Between(c, d, a) || Between(c, d, b))
+                return true;
+            else {
+                return false;
+            }
+        }
+
+        static bool isDiagonal(List<Vertex> poly, Vertex a, Vertex b) {
+            for (int i = 0; i < poly.Count - 1; i++) {
+                if ((poly[i].index != a.index) && (poly[i + 1].index != a.index) && (poly[i].index != b.index) &&
+                    (poly[i + 1].index != b.index) && Intersect(a.P, b.P, poly[i].P, poly[i + 1].P)) {
+                    return false;
+                }
+            }
+
+            if ((poly[poly.Count - 1].index != a.index) && (poly[0].index != a.index) &&
+                (poly[poly.Count - 1].index != b.index) && (poly[0].index != b.index) &&
+                Intersect(a.P, b.P, poly[poly.Count - 1].P, poly[0].P)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        static bool Diagonal(List<Vertex> poly, Vertex a, Vertex b) {
+            if (a.index == b.index) {
+                return false;
+            }
+
+            if (a.index - b.index == 1 || a.index - b.index == -1) {
+                return false;
+            }
+
+            return (InCone(poly, a, b) && InCone(poly, b, a) && isDiagonal(poly, a, b));
+        }
+
+
+        static void verifyChain(List<Vertex> u) {
+            for (int i = 0; i < u.Count; i++) {
+                u[i].index = i + 1;
+            }
+
+            int Y_MAX = 0;
+            int Y_MIN = 0;
+            for (int i = 0; i < u.Count; i++) {
+                if (u[i].P.Y > u[Y_MAX].P.Y) {
+                    Y_MAX = i;
+                }
+
+                if (u[i].P.Y < u[Y_MIN].P.Y) {
+                    Y_MIN = i;
+                }
+            }
+
+            log.WriteLine($"i max = {Y_MAX}");
+            log.WriteLine($"i min = {Y_MIN}");
+
+            for (int i = Y_MIN; i != Y_MAX; i = (i + 1) % u.Count) {
+                u[i].chain = false;
+                log.WriteLine($"this chain {i + 1} is false;");
+            }
+
+            for (int i = Y_MAX; i != Y_MIN; i = (i + 1) % u.Count) {
+                u[i].chain = true;
+                log.WriteLine($"this chain {i + 1} is true");
+            }
+        }
+
+        static void Triangulate(List<Vertex> poly) {
+            List<Vertex> u = new List<Vertex>(poly);
+            for (int i = 0; i < u.Count; i++) {
+                u[i].index = i + 1;
+            }
+            verifyChain(u);
+            u.Sort(((v1, v2) => {
+                if (v1.P.Y == v2.P.Y)
+                    return v1.P.X - v2.P.X;
+                return -v1.P.Y + v2.P.Y;
+            }));
+            Stack<Vertex> stack = new Stack<Vertex>();
+            stack.Push(u[0]);
+            stack.Push(u[1]);
+            for (int i = 2; i < u.Count - 1; i++) {
+                if (u[i].chain != stack.Peek().chain) {
+                    log.WriteLine("diff chain");
+                    while (stack.Count != 1) {
+                        Vertex x = stack.Pop();
+                        log.WriteLine($"add diagonal from {x.index} to {u[i].index} ");
+                        drawDashedLine(x.P,u[i].P);
+                    }
+
+                    while (stack.Count != 0) {
+                        stack.Pop();
+                    }
+
+                    stack.Push(u[i - 1]);
+                    stack.Push(u[i]);
+                } else {
+                    log.WriteLine("same chain");
+                    Vertex x = null;
+                    while (stack.Count != 0) {
+                        x = stack.Pop();
+                        if (Diagonal(poly, x, u[i])) {
+                            log.WriteLine($"add diagonal from {x.index} to {u[i].index} ");
+                            drawDashedLine(x.P,u[i].P);
+                            break;
+                        }
+                    }
+
+                    stack.Push(x);
+                    stack.Push(u[i]);
+                }
+
+                Vertex[] k = stack.ToArray();
+                log.WriteLine("Stack now  : ");
+                for (int j = 0; j < k.Length; j++) {
+                    log.Write($"{k[j].index}");
+                }
+
+                log.WriteLine("");
+            }
+
+            Vertex[] remain = stack.ToArray();
+            for (int i = 1; i < remain.Length - 1; i++) {
+                log.WriteLine($"add diagonal from {remain[i].index} to last ");
+            }
+        }
+
+        static void Start() {
+            log = new StreamWriter("log.txt");
+            monotonePartition();
+            log.Close();
         }
     }
 }
